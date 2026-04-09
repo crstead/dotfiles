@@ -1,0 +1,28 @@
+# Black background
+color=020202
+
+# Show a subtle central indicator
+indicator
+indicator-idle-visible=true
+indicator-radius=10      # very small
+indicator-thickness=4    # thin ring
+
+# Colors for state
+ring-color=555555ff       # idle — visible immediately
+ring-ver-color=88ff88ff   # correct password
+ring-wrong-color=ff4444ff # wrong password
+ring-clear-color=8888ffff # clearing input
+
+# No text or inside fill
+inside-color=00000000
+text-color=00000000
+line-color=00000000
+separator-color=00000000
+
+# No blur or vignette
+effect-blur=0x0
+effect-vignette=0:0
+
+# Key highlight while typing (optional)
+key-hl-color=ffffffff
+bs-hl-color=ff4444ff
