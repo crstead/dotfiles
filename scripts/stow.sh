@@ -1,15 +1,12 @@
 #!/usr/bin/env bash
 
 stow_dotfiles() {
-  local dotfiles_dir
-  local stow_dir
-
-  dotfiles_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-  stow_dir="$dotfiles_dir/stow"
+  local stow_dir="$DOTFILES_DIR/stow"
 
   echo
   echo "== Stowing dotfiles =="
 
+  # Packages whose contents belong directly under $HOME.
   local home_packages=(
     git
     zsh
@@ -25,16 +22,19 @@ stow_dotfiles() {
       "$package"
   done
 
-  local config_packages=(
-    kitty
-    nvim
-    sway
-    swaylock
-    waybar
-    zathura
-  )
+  # Every other package is assumed to belong under ~/.config/<package>.
+  for package_dir in "$stow_dir"/*; do
+    [[ -d "$package_dir" ]] || continue
 
-  for package in "${config_packages[@]}"; do
+    local package
+    package="$(basename "$package_dir")"
+
+    case "$package" in
+    git | zsh)
+      continue
+      ;;
+    esac
+
     local target="$HOME/.config/$package"
 
     mkdir -p "$target"
