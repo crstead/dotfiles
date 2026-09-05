@@ -8,6 +8,8 @@ stow_dotfiles() {
   stow_dir="$dotfiles_dir/stow"
 
   local packages=(
+    git
+    zsh
     nvim
     sway
     swaylock
