@@ -4,6 +4,8 @@ set -euo pipefail
 
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+export DOTFILES_DIR
+
 source "$DOTFILES_DIR/scripts/packages.sh"
 source "$DOTFILES_DIR/scripts/neovim.sh"
 source "$DOTFILES_DIR/scripts/stow.sh"
