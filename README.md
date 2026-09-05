@@ -6,94 +6,96 @@ Personal Ubuntu 24.04 dotfiles and machine setup.
 
 Run:
 
-```bash
+```bash id="jj49p1"
 ./install.sh
 ```
 
 Include optional apps with:
 
-```bash
+```bash id="n7t40l"
 ./install.sh --extras
 ```
 
 ## Stow layout
 
-Application configs use a flattened layout.
+`$HOME/dotfiles/stow/` mirrors `$HOME`.
 
-```text
-~/dotfiles/stow/kitty/kitty.conf
-→ ~/.config/kitty/kitty.conf
+For example:
+
+```text id="pf0d8q"
+$HOME/dotfiles/stow/.config/kitty/kitty.conf
+→ $HOME/.config/kitty/kitty.conf
 ```
 
-```text
-~/dotfiles/stow/nvim/init.lua
-→ ~/.config/nvim/init.lua
+```text id="xw7stc"
+$HOME/dotfiles/stow/.config/nvim/init.lua
+→ $HOME/.config/nvim/init.lua
 ```
 
-Home-level packages target `$HOME`:
-
-```text
-~/dotfiles/stow/zsh/.zshrc
-→ ~/.zshrc
+```text id="2g5q76"
+$HOME/dotfiles/stow/.zshrc
+→ $HOME/.zshrc
 ```
+
+The entire `stow` directory is one GNU Stow package.
 
 ## Add a new app config
 
 For an app whose config lives at:
 
-```text
-~/.config/foo/
+```text id="eklsjb"
+$HOME/.config/foo/
 ```
 
 run:
 
-```bash
+```bash id="npp49i"
 ./scripts/add-stow-config.sh foo
 ```
 
-The helper moves the config into:
+The helper moves it into:
 
-```text
-~/dotfiles/stow/foo/
+```text id="i2wy3t"
+$HOME/dotfiles/stow/.config/foo/
 ```
 
-and Stows it back into:
-
-```text
-~/.config/foo/
-```
+and restows the dotfiles package.
 
 Then commit it:
 
-```bash
-git add stow/foo
+```bash id="gp447t"
+git add stow/.config/foo
 git commit -m "Add foo config"
 ```
 
 ## Restow
 
-The main installer runs Stow automatically.
+The installer restows dotfiles automatically.
 
-To run only the Stow setup:
+Manually:
 
-```bash
-bash -c '
-  DOTFILES_DIR="$HOME/dotfiles"
-  export DOTFILES_DIR
-  source "$DOTFILES_DIR/scripts/stow.sh"
-  stow_dotfiles
-'
+```bash id="vsl7dx"
+cd "$HOME/dotfiles"
+stow --dir="$HOME/dotfiles" --target="$HOME" --restow stow
 ```
 
 ## Validate
 
-```bash
+Check shell syntax:
+
+```bash id="5btcn5"
 bash -n install.sh
 bash -n scripts/*.sh
 ```
 
-Verify a managed file with:
+Verify a managed file:
 
-```bash
-readlink -f ~/.config/nvim/init.lua
+```bash id="6wbvye"
+readlink -f "$HOME/.config/nvim/init.lua"
+```
+
+It should resolve somewhere under:
+
+```text id="59b4n4"
+$HOME/dotfiles/stow/
 ```

@@ -7,27 +7,20 @@ if [[ $# -ne 1 ]]; then
   echo
   echo "Example:"
   echo "  $0 mako"
-  echo
-  echo "This migrates:"
-  echo "  ~/.config/<app>/"
-  echo "to:"
-  echo "  ~/dotfiles/stow/<app>/"
   exit 1
 fi
 
 APP="$1"
 
-# Only support simple ~/.config/<app> directory names.
 if [[ "$APP" == */* || "$APP" == "." || "$APP" == ".." ]]; then
   echo "ERROR: app must be a simple directory name."
   exit 1
 fi
 
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-STOW_DIR="$DOTFILES_DIR/stow"
 
 SOURCE_DIR="$HOME/.config/$APP"
-PACKAGE_DIR="$STOW_DIR/$APP"
+DEST_DIR="$DOTFILES_DIR/stow/.config/$APP"
 BACKUP_DIR="$HOME/.config/.${APP}.stow-backup.$$"
 
 if [[ ! -d "$SOURCE_DIR" ]]; then
@@ -36,14 +29,9 @@ if [[ ! -d "$SOURCE_DIR" ]]; then
   exit 1
 fi
 
-if [[ -L "$SOURCE_DIR" ]]; then
-  echo "ERROR: $SOURCE_DIR is already a symlink."
-  exit 1
-fi
-
-if [[ -e "$PACKAGE_DIR" ]]; then
-  echo "ERROR: Stow package already exists:"
-  echo "  $PACKAGE_DIR"
+if [[ -e "$DEST_DIR" ]]; then
+  echo "ERROR: config is already present in dotfiles:"
+  echo "  $DEST_DIR"
   exit 1
 fi
 
@@ -59,7 +47,7 @@ rollback() {
     mv "$BACKUP_DIR" "$SOURCE_DIR"
   fi
 
-  rm -rf "$PACKAGE_DIR"
+  rm -rf "$DEST_DIR"
 
   exit "$exit_code"
 }
@@ -68,16 +56,14 @@ trap rollback ERR
 
 echo "== Adding $APP to dotfiles =="
 
-echo
+mkdir -p "$DOTFILES_DIR/stow/.config"
+
 echo "Moving original config aside..."
 mv "$SOURCE_DIR" "$BACKUP_DIR"
 
 echo "Copying config into dotfiles..."
-mkdir -p "$PACKAGE_DIR"
-cp -a "$BACKUP_DIR/." "$PACKAGE_DIR/"
-
-echo "Creating Stow target..."
-mkdir -p "$SOURCE_DIR"
+mkdir -p "$DEST_DIR"
+cp -a "$BACKUP_DIR/." "$DEST_DIR/"
 
 echo
 echo "== Stow dry run =="
@@ -85,20 +71,20 @@ echo "== Stow dry run =="
 stow \
   --no \
   --verbose \
-  --dir="$STOW_DIR" \
-  --target="$SOURCE_DIR" \
-  "$APP"
+  --dir="$DOTFILES_DIR" \
+  --target="$HOME" \
+  stow
 
 echo
-echo "== Stowing $APP =="
+echo "== Restowing dotfiles =="
 
 stow \
   --verbose \
-  --dir="$STOW_DIR" \
-  --target="$SOURCE_DIR" \
-  "$APP"
+  --dir="$DOTFILES_DIR" \
+  --target="$HOME" \
+  --restow \
+  stow
 
-# Migration succeeded, so rollback is no longer required.
 trap - ERR
 
 rm -rf "$BACKUP_DIR"
@@ -106,16 +92,10 @@ rm -rf "$BACKUP_DIR"
 echo
 echo "== Done =="
 echo
-echo "Config:"
-echo "  $SOURCE_DIR"
+echo "$SOURCE_DIR"
+echo "  -> $DEST_DIR"
 echo
-echo "Canonical dotfiles:"
-echo "  $PACKAGE_DIR"
-echo
-echo "Verify with:"
-echo "  find \"$SOURCE_DIR\" -maxdepth 1 -type l -ls"
-echo
-echo "Git:"
+echo "Commit with:"
 echo "  cd \"$DOTFILES_DIR\""
-echo "  git add \"stow/$APP\""
+echo "  git add \"stow/.config/$APP\""
 echo "  git commit -m \"Add $APP config\""
