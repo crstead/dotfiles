@@ -14,7 +14,7 @@ set $down j
 set $up k
 set $right l
 # Your preferred terminal emulator
-set $term foot
+set $term kitty
 # Your preferred application launcher
 # Note: pass the final command to swaymsg so that the resulting window can be opened
 # on the original workspace that the command was run on.
@@ -165,6 +165,12 @@ output HDMI-A-1 scale 1.25
 
     # Move focus to the parent container
     bindsym $mod+a focus parent
+
+    # Swap windows around
+    bindsym $mod+ctrl+Left move left
+    bindsym $mod+ctrl+Down move down
+    bindsym $mod+ctrl+Up move up
+    bindsym $mod+ctrl+Right move right
 #
 # Scratchpad:
 #
@@ -233,7 +239,7 @@ bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
 # exec waybar
 exec mako
 
-exec_always sh -c "sleep 2 && wlsunset -l -36.8485 -L 174.7633 -t 2500 -T 3500 -d 1800"
+exec_always sh -c "sleep 2 && wlsunset -l -36.8485 -L 174.7633 -t 2500 -T 5000 -d 1800"
 exec_always --no-startup-id swayidle -w \
   timeout 300 'swaylock -f -c 000000' \
   timeout 600 'swaymsg "output * dpms off"' \

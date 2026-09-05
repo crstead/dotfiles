@@ -1,0 +1,20 @@
+require("config.globals")
+require("config.lazy")
+require("config.options")
+require("config.autocmds")
+require("nvim-treesitter").install({
+	"vim",
+	"vimdoc",
+	"rust",
+	"c",
+	"go",
+	"html",
+	"css",
+	"javascript",
+	"json",
+	"lua",
+	"markdown",
+	"python",
+	"typescript",
+	"bash",
+})
