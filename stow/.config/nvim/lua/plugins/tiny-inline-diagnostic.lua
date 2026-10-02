@@ -7,7 +7,7 @@ return {
 			require("tiny-inline-diagnostic").setup({
 				options = {},
 			})
-			vim.diagnostic.config({ virtual_text = false }) -- Disable Neovim's default virtual text diagnostics
+			vim.diagnostic.config({ virtual_text = false, update_in_insert = true }) -- Disable Neovim's default virtual text diagnostics
 		end,
 	},
 }

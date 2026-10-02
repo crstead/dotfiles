@@ -35,6 +35,7 @@ return {
 			},
 			keymap = {
 				preset = "default",
+				["<C-y>"] = { "select_and_accept" },
 			},
 			appearance = {
 				-- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
