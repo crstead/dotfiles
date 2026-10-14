@@ -2,53 +2,108 @@
 
 install_neovim() {
   local neovim_dir="$HOME/tmp/neovim"
+  local state_dir="$HOME/.local/state/dotfiles"
+  local stamp="$state_dir/neovim-commit"
+  local stable_commit
+  local installed_commit=""
+  local checked_out_commit
 
   echo
   echo "== Installing Neovim from source =="
 
-  mkdir -p "$HOME/tmp"
+  mkdir -p "$HOME/tmp" "$state_dir"
 
+  # Clone the source repository if necessary.
   if [[ ! -d "$neovim_dir/.git" ]]; then
     echo "Cloning Neovim..."
-    git clone https://github.com/neovim/neovim "$neovim_dir"
+    git clone https://github.com/neovim/neovim \
+      "$neovim_dir" || return 1
   fi
 
-  cd "$neovim_dir"
+  # Update tags, including the moving stable tag.
+  echo "Fetching Neovim releases..."
+  git -C "$neovim_dir" fetch --tags --force origin ||
+    return 1
 
-  echo "Updating Neovim repository..."
-  git fetch --tags
+  stable_commit="$(
+    git -C "$neovim_dir" rev-parse \
+      'refs/tags/stable^{commit}'
+  )" || return 1
 
-  echo "Checking out stable branch..."
-  git checkout stable
-  git pull --ff-only
+  if [[ -f "$stamp" ]]; then
+    installed_commit="$(cat "$stamp")"
+  fi
 
-  echo "Building Neovim..."
-  make CMAKE_BUILD_TYPE=RelWithDebInfo
+  # Skip rebuilding if this installer has already
+  # installed the current stable commit.
+  if [[ "$installed_commit" == "$stable_commit" ]] &&
+     command -v nvim >/dev/null 2>&1; then
+    echo "Neovim is already up to date."
+  else
+    echo "Checking out stable release..."
+    git -C "$neovim_dir" checkout stable || return 1
 
-  echo "Installing Neovim..."
-  sudo make install
+    checked_out_commit="$(
+      git -C "$neovim_dir" rev-parse HEAD
+    )" || return 1
+
+    if [[ "$checked_out_commit" != "$stable_commit" ]]; then
+      echo "ERROR: Checkout does not match stable tag."
+      echo "Check for a conflicting local stable branch."
+      return 1
+    fi
+
+    echo "Building Neovim..."
+    make -C "$neovim_dir" \
+      CMAKE_BUILD_TYPE=RelWithDebInfo || return 1
+
+    echo "Installing Neovim..."
+    sudo make -C "$neovim_dir" install || return 1
+
+    # Record only successful installations.
+    printf '%s\n' "$stable_commit" > "$stamp" ||
+      return 1
+
+    echo "Neovim installed successfully."
+  fi
 
   echo
   echo "Installed Neovim version:"
-  nvim --version | head -n 1
-
+  nvim --version | sed -n '1p'
 
   echo
-  echo "== Installing tree-sitter CLI =="
+  echo "== Checking Tree-sitter CLI =="
 
-  if ! command -v npm >/dev/null 2>&1; then
-    echo "ERROR: npm is required to install tree-sitter-cli."
+  if command -v tree-sitter >/dev/null 2>&1; then
+    echo "Tree-sitter CLI is already installed."
+
+  elif [[ -x "$HOME/.local/bin/tree-sitter" ]]; then
+    echo "Tree-sitter CLI is installed locally."
+
+  else
+    if ! command -v npm >/dev/null 2>&1; then
+      echo "ERROR: npm is required for Tree-sitter CLI."
+      return 1
+    fi
+
+    echo "Installing Tree-sitter CLI..."
+
+    npm install --global \
+      --prefix "$HOME/.local" \
+      tree-sitter-cli || return 1
+  fi
+
+  # Verify installation.
+  if command -v tree-sitter >/dev/null 2>&1; then
+    tree-sitter --version || return 1
+  elif [[ -x "$HOME/.local/bin/tree-sitter" ]]; then
+    "$HOME/.local/bin/tree-sitter" --version ||
+      return 1
+  else
+    echo "ERROR: Tree-sitter CLI is unavailable."
     return 1
   fi
 
-  if ! command -v tree-sitter >/dev/null 2>&1; then
-    sudo npm install -g tree-sitter-cli
-  fi
-
-  if ! command -v tree-sitter >/dev/null 2>&1; then
-    echo "ERROR: tree-sitter CLI installation failed."
-    return 1
-  fi
-
-  echo "Tree-sitter CLI: $(tree-sitter --version)"
+  echo
+  echo "Neovim setup complete."
 }

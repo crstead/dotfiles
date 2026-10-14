@@ -25,7 +25,7 @@ include /etc/sway/config-vars.d/*
 ### Output configuration
 #
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
-output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
+output * bg "#1e1e2e" solid_color
 #
 # Example configuration:
 #
@@ -33,8 +33,15 @@ output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
 #
 # You can get the names of your outputs by running: swaymsg -t get_outputs
 
-output HDMI-A-1 scale 1.25 
+output HDMI-A-1 scale 1.25
 
+# Clamshell mode
+# Disable the internal display when the lid closes.
+# Restore it when the lid opens.
+set $laptop eDP-1
+
+bindswitch --reload --locked lid:on output $laptop disable
+bindswitch --reload --locked lid:off output $laptop enable
 
 ### Idle configuration
 #
@@ -235,12 +242,16 @@ bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
 bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
 bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
 
+# Brightness control
+bindsym XF86MonBrightnessUp exec brightnessctl set 5%+
+bindsym XF86MonBrightnessDown exec brightnessctl set 5%-
+
 
 # exec waybar
 exec mako
 
-exec_always sh -c "sleep 2 && wlsunset -l -36.8485 -L 174.7633 -t 2500 -T 5000 -d 1800"
-exec_always --no-startup-id swayidle -w \
+exec sh -c "sleep 2 && wlsunset -l -36.8485 -L 174.7633 -t 2500 -T 5000 -d 1800"
+exec swayidle -w \
   timeout 300 'swaylock -f -c 000000' \
   timeout 600 'swaymsg "output * dpms off"' \
   resume 'swaymsg "output * dpms on"' \

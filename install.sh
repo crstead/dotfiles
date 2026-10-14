@@ -1,3 +1,4 @@
+
 #!/usr/bin/env bash
 
 set -euo pipefail
@@ -9,7 +10,6 @@ export DOTFILES_DIR
 source "$DOTFILES_DIR/scripts/packages.sh"
 source "$DOTFILES_DIR/scripts/neovim.sh"
 source "$DOTFILES_DIR/scripts/stow.sh"
-source "$DOTFILES_DIR/scripts/manual.sh"
 
 INSTALL_EXTRAS=false
 
@@ -26,10 +26,39 @@ for arg in "$@"; do
   esac
 done
 
+# Install system-wide configuration files.
+install_system_config() {
+  echo
+  echo "== Installing system configuration =="
+
+  local source="$DOTFILES_DIR/system/90-clamshell.conf"
+  local target="/etc/systemd/logind.conf.d/90-clamshell.conf"
+
+  if [[ ! -f "$source" ]]; then
+    echo "ERROR: Missing system configuration: $source"
+    return 1
+  fi
+
+  # Skip installation when the file is unchanged.
+  if sudo test -f "$target" &&
+     sudo cmp -s "$source" "$target"; then
+    echo "Clamshell configuration is unchanged."
+    return 0
+  fi
+
+  # Install the configuration with appropriate permissions.
+  sudo install -D -m 0644 "$source" "$target" ||
+    return 1
+
+  echo "Clamshell configuration installed."
+  echo "Reboot to apply the updated lid-switch settings."
+}
+
+# Main installation sequence.
 install_packages "$INSTALL_EXTRAS"
 install_neovim
 stow_dotfiles
-print_manual_install_notes
+install_system_config
 
 echo
 echo "== Installation complete =="
