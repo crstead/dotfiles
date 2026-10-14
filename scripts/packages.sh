@@ -11,6 +11,12 @@ install_packages() {
     # Dotfiles / development
     # ───────────────────────────────────────────
 
+    zsh
+    # Shell
+
+    nodejs
+    npm
+    
     git
     # Version control. Used to manage this dotfiles repository.
 
@@ -74,6 +80,11 @@ install_packages() {
     brightnessctl
     # Controls display/backlight brightness, typically from Sway keybindings.
 
+    xdg-desktop-portal
+    xdg-desktop-portal-wlr
+    xdg-desktop-portal-gtk
+    # Wayland desktop integration
+
     # ───────────────────────────────────────────
     # Screenshots
     # ───────────────────────────────────────────
@@ -107,9 +118,26 @@ install_packages() {
 
     zathura
     # Lightweight keyboard-driven document/PDF viewer.
+
+    # ───────────────────────────────────────────
+    # General utilities
+    # ───────────────────────────────────────────
+
+    unzip
+
+    xdg-utils
+    # Desktop integration utilities (xdg-open, default applications, MIME associations)
+
   )
 
   local extra_packages=(
+    firefox
+    # Web browser
+
+    thunar-archive-plugin
+    file-roller
+    # File manager integration
+
     galculator
     # Lightweight desktop calculator.
 

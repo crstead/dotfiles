@@ -38,5 +38,6 @@ if [[ "$INSTALL_EXTRAS" != true ]]; then
   echo
   echo "Optional applications were not installed."
   echo "Run with --extras to install:"
-  echo "  galculator, okular, pavucontrol, thunar"
+  echo "  firefox, galculator, okular, pavucontrol,"
+  echo "  thunar, thunar-archive-plugin, file-roller"
 fi

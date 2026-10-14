@@ -32,14 +32,23 @@ install_neovim() {
   echo "Installed Neovim version:"
   nvim --version | head -n 1
 
+
   echo
   echo "== Installing tree-sitter CLI =="
 
-  if command -v npm >/dev/null 2>&1; then
-    npm install -g tree-sitter-cli
-  else
-    echo "npm is not installed; skipping tree-sitter-cli."
-    echo "After installing Node.js/npm, run:"
-    echo "  npm install -g tree-sitter-cli"
+  if ! command -v npm >/dev/null 2>&1; then
+    echo "ERROR: npm is required to install tree-sitter-cli."
+    return 1
   fi
+
+  if ! command -v tree-sitter >/dev/null 2>&1; then
+    sudo npm install -g tree-sitter-cli
+  fi
+
+  if ! command -v tree-sitter >/dev/null 2>&1; then
+    echo "ERROR: tree-sitter CLI installation failed."
+    return 1
+  fi
+
+  echo "Tree-sitter CLI: $(tree-sitter --version)"
 }
