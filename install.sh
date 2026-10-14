@@ -27,6 +27,27 @@ for arg in "$@"; do
   esac
 done
 
+configure_default_shell() {
+  echo
+  echo "== Configuring default shell =="
+
+  local zsh_path
+  zsh_path="$(command -v zsh)" || return 1
+
+  local current_shell
+  current_shell="$(getent passwd "$USER" | cut -d: -f7)"
+
+  if [[ "$current_shell" == "$zsh_path" ]]; then
+    echo "Zsh is already the default shell."
+    return 0
+  fi
+
+  chsh -s "$zsh_path" || return 1
+
+  echo "Default shell changed to Zsh."
+  echo "Log out and back in to apply."
+}
+
 # Install system-wide configuration files.
 install_system_config() {
   echo
@@ -55,8 +76,10 @@ install_system_config() {
   echo "Reboot to apply the updated lid-switch settings."
 }
 
+
 # Main installation sequence.
 install_packages "$INSTALL_EXTRAS"
+configure_default_shell
 install_neovim
 stow_dotfiles
 install_firefox_policy
