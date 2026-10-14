@@ -8,6 +8,7 @@ DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 export DOTFILES_DIR
 
 source "$DOTFILES_DIR/scripts/packages.sh"
+source "$DOTFILES_DIR/scripts/firefox.sh"
 source "$DOTFILES_DIR/scripts/neovim.sh"
 source "$DOTFILES_DIR/scripts/stow.sh"
 
@@ -58,6 +59,7 @@ install_system_config() {
 install_packages "$INSTALL_EXTRAS"
 install_neovim
 stow_dotfiles
+install_firefox_policy
 install_system_config
 
 echo
