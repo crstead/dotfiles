@@ -71,6 +71,9 @@ install_packages() {
     waybar
     # Status bar for Sway and other Wayland compositors.
 
+    fuzzel
+    # Lightweight Wayland application launcher.
+
     wlsunset
     # Adjusts display colour temperature according to time of day.
 
