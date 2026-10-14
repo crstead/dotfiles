@@ -10,6 +10,7 @@ export DOTFILES_DIR
 source "$DOTFILES_DIR/scripts/packages.sh"
 source "$DOTFILES_DIR/scripts/firefox.sh"
 source "$DOTFILES_DIR/scripts/neovim.sh"
+source "$DOTFILES_DIR/scripts/zsh.sh"
 source "$DOTFILES_DIR/scripts/stow.sh"
 
 INSTALL_EXTRAS=false
@@ -77,8 +78,9 @@ install_system_config() {
 }
 
 
-# Main installation sequence.
+# Main installation sequence
 install_packages "$INSTALL_EXTRAS"
+install_zsh_config
 configure_default_shell
 install_neovim
 stow_dotfiles
