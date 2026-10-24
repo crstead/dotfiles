@@ -79,6 +79,21 @@ cd "$HOME/dotfiles"
 stow --dir="$HOME/dotfiles" --target="$HOME" --restow stow
 ```
 
+## Review changes in Neovim
+
+CodeDiff loads on demand with `:CodeDiff` or `Space gd`. Open it in a Git
+repository to review staged, unstaged, and untracked changes while an AI agent
+works. The explorer refreshes automatically; `R` refreshes it manually.
+These views include all local changes, regardless of who made them.
+
+- `Space gf`: compare the current file with HEAD.
+- `]c` / `[c`: next / previous change.
+- `]f` / `[f`: next / previous file.
+- `q`: close the diff tab.
+
+Lazy installs the plugin on startup. CodeDiff downloads its native diff library
+on first use; `:CodeDiff install` installs it explicitly.
+
 ## Validate
 
 Check shell syntax:

@@ -1,3 +1,8 @@
 [user]
 	email = crstead@pm.me
 	name = Christopher Stead
+[alias]
+	s = status
+	nb = checkout -b
+	co = checkout
+	ri = "!f() { git rebase -i \"HEAD~$1\"; }; f"
