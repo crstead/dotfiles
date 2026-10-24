@@ -12,7 +12,7 @@ fi
 
 APP="$1"
 
-if [[ "$APP" == */* || "$APP" == "." || "$APP" == ".." ]]; then
+if [[ -z "$APP" || "$APP" == */* || "$APP" == "." || "$APP" == ".." ]]; then
   echo "ERROR: app must be a simple directory name."
   exit 1
 fi
@@ -29,25 +29,40 @@ if [[ ! -d "$SOURCE_DIR" ]]; then
   exit 1
 fi
 
-if [[ -e "$DEST_DIR" ]]; then
+if [[ -e "$DEST_DIR" || -L "$DEST_DIR" ]]; then
   echo "ERROR: config is already present in dotfiles:"
   echo "  $DEST_DIR"
   exit 1
 fi
 
+original_moved=false
+destination_created=false
+
 rollback() {
   local exit_code=$?
+  trap - ERR
 
   echo
   echo "Migration failed. Restoring original config..."
 
-  rm -rf "$SOURCE_DIR"
-
-  if [[ -d "$BACKUP_DIR" ]]; then
-    mv "$BACKUP_DIR" "$SOURCE_DIR"
+  if [[ "$original_moved" == true ]]; then
+    # Stow may have created a link before failing. Never remove a real directory.
+    if [[ -L "$SOURCE_DIR" ]]; then
+      rm -- "$SOURCE_DIR"
+    fi
+    if [[ -e "$SOURCE_DIR" || -L "$SOURCE_DIR" ]]; then
+      echo "ERROR: Restore blocked; original config is preserved at $BACKUP_DIR"
+      exit "$exit_code"
+    fi
+    if ! mv -- "$BACKUP_DIR" "$SOURCE_DIR"; then
+      echo "ERROR: Restore failed; original config is preserved at $BACKUP_DIR"
+      exit "$exit_code"
+    fi
   fi
 
-  rm -rf "$DEST_DIR"
+  if [[ "$destination_created" == true ]]; then
+    rm -rf -- "$DEST_DIR"
+  fi
 
   exit "$exit_code"
 }
@@ -60,15 +75,18 @@ mkdir -p "$DOTFILES_DIR/stow/.config"
 
 echo "Moving original config aside..."
 mv "$SOURCE_DIR" "$BACKUP_DIR"
+original_moved=true
 
 echo "Copying config into dotfiles..."
 mkdir -p "$DEST_DIR"
+destination_created=true
 cp -a "$BACKUP_DIR/." "$DEST_DIR/"
 
 echo
 echo "== Stow dry run =="
 
 stow \
+  --no-folding \
   --no \
   --verbose \
   --dir="$DOTFILES_DIR" \
@@ -79,6 +97,7 @@ echo
 echo "== Restowing dotfiles =="
 
 stow \
+  --no-folding \
   --verbose \
   --dir="$DOTFILES_DIR" \
   --target="$HOME" \

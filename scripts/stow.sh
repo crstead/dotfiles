@@ -28,6 +28,7 @@ stow_dotfiles() {
   fi
 
   stow \
+    --no-folding \
     --dir="$DOTFILES_DIR" \
     --target="$HOME" \
     --restow \

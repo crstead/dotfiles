@@ -1,4 +1,3 @@
-
 #!/usr/bin/env bash
 
 set -euo pipefail
@@ -7,26 +6,41 @@ DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 export DOTFILES_DIR
 
+CHECK_ONLY=false
+
+usage() {
+  echo "Usage: $0 [--check]"
+  echo "  --check   Validate configuration without changes, sudo, or network access."
+}
+
+for arg in "$@"; do
+  case "$arg" in
+  --check)
+    CHECK_ONLY=true
+    ;;
+  --help|-h)
+    usage
+    exit 0
+    ;;
+  *)
+    echo "Unknown option: $arg"
+    usage
+    exit 1
+    ;;
+  esac
+done
+
+if [[ "$CHECK_ONLY" == true ]]; then
+  source "$DOTFILES_DIR/scripts/check.sh"
+  check_installation
+  exit $?
+fi
+
 source "$DOTFILES_DIR/scripts/packages.sh"
 source "$DOTFILES_DIR/scripts/firefox.sh"
 source "$DOTFILES_DIR/scripts/neovim.sh"
 source "$DOTFILES_DIR/scripts/zsh.sh"
 source "$DOTFILES_DIR/scripts/stow.sh"
-
-INSTALL_EXTRAS=false
-
-for arg in "$@"; do
-  case "$arg" in
-  --extras)
-    INSTALL_EXTRAS=true
-    ;;
-  *)
-    echo "Unknown option: $arg"
-    echo "Usage: $0 [--extras]"
-    exit 1
-    ;;
-  esac
-done
 
 configure_default_shell() {
   echo
@@ -79,7 +93,7 @@ install_system_config() {
 
 
 # Main installation sequence
-install_packages "$INSTALL_EXTRAS"
+install_packages
 install_zsh_config
 configure_default_shell
 install_neovim
@@ -89,11 +103,3 @@ install_system_config
 
 echo
 echo "== Installation complete =="
-
-if [[ "$INSTALL_EXTRAS" != true ]]; then
-  echo
-  echo "Optional applications were not installed."
-  echo "Run with --extras to install:"
-  echo "  firefox, galculator, okular, pavucontrol,"
-  echo "  thunar, thunar-archive-plugin, file-roller"
-fi

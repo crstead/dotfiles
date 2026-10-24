@@ -4,9 +4,7 @@
 # Review package names and defaults before using on a newer Ubuntu release.
 
 install_packages() {
-  local install_extras="$1"
-
-  local core_packages=(
+  local packages=(
     # ───────────────────────────────────────────
     # Dotfiles / development
     # ───────────────────────────────────────────
@@ -16,6 +14,9 @@ install_packages() {
 
     nodejs
     npm
+
+    python3-venv
+    # Mason creates virtual environments for Python tools such as black.
     
     git
     # Version control. Used to manage this dotfiles repository.
@@ -137,9 +138,9 @@ install_packages() {
     xdg-utils
     # Desktop integration utilities (xdg-open, default applications, MIME associations)
 
-  )
 
-  local extra_packages=(
+    # Desktop applications
+
     firefox
     # Web browser
 
@@ -164,12 +165,7 @@ install_packages() {
   sudo apt update
 
   echo
-  echo "== Installing core packages =="
-  sudo apt install -y "${core_packages[@]}"
+  echo "== Installing packages =="
+  sudo apt install -y "${packages[@]}"
 
-  if [[ "$install_extras" == true ]]; then
-    echo
-    echo "== Installing optional applications =="
-    sudo apt install -y "${extra_packages[@]}"
-  fi
 }

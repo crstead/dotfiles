@@ -1,0 +1,20 @@
+# Keep GNU Stow's usual exclusions when adding package-specific rules.
+RCS
+.+,v
+CVS
+\.\#.+
+\..*\.swp
+\~.*
+.*\~
+\.git
+\.gitignore
+\.gitmodules
+.+\.orig
+.+\.rej
+^/README.*
+^/LICENSE.*
+^/COPYING
+
+# Machine-local state must never be linked into the repository.
+^/\.config/go/telemetry(/.*)?$
+^/\.config/pulse/cookie$

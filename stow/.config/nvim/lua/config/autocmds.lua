@@ -2,6 +2,16 @@
 -- AUTOCMDS
 -- ============================================================================
 
+local augroup = vim.api.nvim_create_augroup("Dotfiles", { clear = true })
+
+vim.api.nvim_create_autocmd("FileType", {
+	group = augroup,
+	desc = "Enable Tree-sitter highlighting when a parser is available",
+	callback = function(args)
+		pcall(vim.treesitter.start, args.buf)
+	end,
+})
+
 -- highlight yanked text
 vim.api.nvim_create_autocmd("TextYankPost", {
 	group = augroup,

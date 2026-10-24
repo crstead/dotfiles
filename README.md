@@ -10,11 +10,24 @@ Run:
 ./install.sh
 ```
 
-Include optional apps with:
+The installer includes the desktop applications used by this setup: Firefox,
+Thunar and its archive tools, Pavucontrol, Galculator, and Okular.
 
-```bash id="n7t40l"
-./install.sh --extras
+Check the setup before installing:
+
+```bash
+./install.sh --check
 ```
+
+Checks validate source files, shell syntax, Firefox policy JSON, and Stow
+conflicts, and report which tools and installations are present. They make no
+changes, require no sudo, and use no network access. An existing `.profile`
+is reported as a planned backup, matching the installer's behavior.
+
+Exit status is nonzero when a check finds an error. Missing validation tools
+are reported as skipped checks; missing installation dependencies are listed
+without failing the check. This does not test downloads, package availability,
+builds, or privileged operations.
 
 ## Stow layout
 
@@ -76,8 +89,12 @@ Manually:
 
 ```bash id="vsl7dx"
 cd "$HOME/dotfiles"
-stow --dir="$HOME/dotfiles" --target="$HOME" --restow stow
+stow --no-folding --dir="$HOME/dotfiles" --target="$HOME" --restow stow
 ```
+
+Individual file links keep application-generated state outside the repository.
+Go telemetry and the PulseAudio authentication cookie are excluded from both
+Git and Stow.
 
 ## Review changes in Neovim
 
@@ -94,6 +111,10 @@ These views include all local changes, regardless of who made them.
 Lazy installs the plugin on startup. CodeDiff downloads its native diff library
 on first use; `:CodeDiff install` installs it explicitly.
 
+Mason Tool Installer provisions the formatters configured in Conform on startup.
+Run `:MasonToolsInstall` to retry missing tools. Python formatters require
+`python3-venv`, which the system installer includes.
+
 ## Validate
 
 Check shell syntax:
@@ -101,6 +122,12 @@ Check shell syntax:
 ```bash id="5btcn5"
 bash -n install.sh
 bash -n scripts/*.sh
+```
+
+Run the config migration regression checks in temporary directories:
+
+```bash
+python3 -B -m unittest discover -s scripts/tests
 ```
 
 Verify a managed file:
