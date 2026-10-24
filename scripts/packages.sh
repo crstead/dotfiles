@@ -32,6 +32,9 @@ install_packages() {
     tree
     # Displays directory structures as a tree. Useful for inspecting dotfiles.
 
+    ripgrep
+    # Provides rg for Telescope live_grep, grep_string and file searches.
+
     # ───────────────────────────────────────────
     # Go
     # ───────────────────────────────────────────
