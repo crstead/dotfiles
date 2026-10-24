@@ -125,6 +125,9 @@ install_packages() {
     zathura
     # Lightweight keyboard-driven document/PDF viewer.
 
+    vlc
+    # Media player. Configuration is managed under stow/.config/vlc.
+
     # ───────────────────────────────────────────
     # General utilities
     # ───────────────────────────────────────────
