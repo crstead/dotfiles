@@ -2,6 +2,14 @@ return {
 	{
 		"nvim-neo-tree/neo-tree.nvim",
 		branch = "v3.x",
+		opts = {
+			filesystem = {
+				filtered_items = {
+					hide_dotfiles = false,
+					hide_hidden = false,
+				},
+			},
+		},
 		dependencies = {
 			"nvim-lua/plenary.nvim",
 			"MunifTanjim/nui.nvim",

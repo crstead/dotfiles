@@ -12,8 +12,7 @@ install_packages() {
     zsh
     # Shell
 
-    nodejs
-    npm
+    # Node and npm are installed from official Node binaries by tools.sh.
 
     python3-venv
     # Mason creates virtual environments for Python tools such as black.
@@ -134,6 +133,12 @@ install_packages() {
     # ───────────────────────────────────────────
 
     unzip
+    xz-utils
+    gzip
+
+    htop
+    network-manager-gnome
+    # Waybar actions use htop and nm-connection-editor.
 
     xdg-utils
     # Desktop integration utilities (xdg-open, default applications, MIME associations)

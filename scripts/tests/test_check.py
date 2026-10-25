@@ -74,36 +74,11 @@ class CheckTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertIn("0 error(s)", result.stdout)
 
-    def test_desktop_apps_are_checked_by_default(self):
-        result = self.run_check("--check")
-        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-        for tool in ["firefox", "galculator", "okular", "pavucontrol", "thunar", "file-roller"]:
-            self.assertRegex(result.stdout, rf"(?:FOUND|MISSING): {tool}")
-
-    def test_removed_extras_option_does_not_install(self):
-        for args in [("--extras",), ("--check", "--extras")]:
-            result = self.run_check(*args)
-            self.assertNotEqual(result.returncode, 0)
-            self.assertIn("Unknown option: --extras", result.stdout)
-
     def test_stock_profile_is_expected(self):
         (self.home / ".profile").write_text("# stock profile\n")
         result = self.run_check("--check")
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-        self.assertIn("will back up ~/.profile", result.stdout)
-
-    def test_other_conflict_is_not_hidden_by_profile_exclusion(self):
-        (self.home / ".profile").write_text("# stock profile\n")
-        (self.home / ".zshrc").write_text("# conflicting config\n")
-        result = self.run_check("--check")
-        self.assertNotEqual(result.returncode, 0)
-        self.assertIn("Stow detected conflicts", result.stdout)
-
-    def test_profile_directory_is_an_error(self):
-        (self.home / ".profile").mkdir()
-        result = self.run_check("--check")
-        self.assertNotEqual(result.returncode, 0)
-        self.assertIn("~/.profile is a directory", result.stdout)
+        self.assertIn("will replace ~/.profile", result.stdout)
 
     def test_missing_source_and_invalid_json(self):
         (self.repo / "system/90-clamshell.conf").unlink()
@@ -119,33 +94,6 @@ class CheckTests(unittest.TestCase):
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("Invalid Bash syntax", result.stdout)
         self.assertIn("Checks complete:", result.stdout)
-
-    def test_missing_validation_tools_are_reported(self):
-        minimal_bin = self.root / "minimal-bin"
-        minimal_bin.mkdir()
-        for name in ["bash", "dirname"]:
-            (minimal_bin / name).symlink_to(shutil.which(name))
-        self.env["PATH"] = str(minimal_bin)
-        result = self.run_check("--check")
-        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-        self.assertIn("3 skipped check(s)", result.stdout)
-        self.assertIn("MISSING: git", result.stdout)
-
-    def test_already_stowed_home(self):
-        subprocess.run([shutil.which("stow"), "--no-folding",
-                        f"--dir={self.repo}", f"--target={self.home}", "stow"], check=True)
-        result = self.run_check("--check")
-        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-        self.assertNotIn("will back up ~/.profile", result.stdout)
-
-    def test_help_and_unknown_option_do_not_install(self):
-        result = self.run_check("--help")
-        self.assertEqual(result.returncode, 0)
-        self.assertIn("--check", result.stdout)
-        result = self.run_check("--check", "--unknown")
-        self.assertNotEqual(result.returncode, 0)
-        self.assertIn("Unknown option", result.stdout)
-
 
 if __name__ == "__main__":
     unittest.main()

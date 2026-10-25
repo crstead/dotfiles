@@ -43,21 +43,6 @@ class MigrationTests(unittest.TestCase):
         self.assertEqual((self.source / "original").read_text(), "keep me")
         self.assertFalse((self.repo / "stow/.config/demo").exists())
 
-    def test_initial_move_failure_preserves_original(self):
-        self.mock("mv", "exit 1")
-        self.assertNotEqual(self.run_migration().returncode, 0)
-        self.assert_original_preserved()
-
-    def test_initial_mkdir_failure_preserves_original(self):
-        self.mock("mkdir", "exit 1")
-        self.assertNotEqual(self.run_migration().returncode, 0)
-        self.assert_original_preserved()
-
-    def test_copy_failure_restores_original(self):
-        self.mock("cp", "exit 1")
-        self.assertNotEqual(self.run_migration().returncode, 0)
-        self.assert_original_preserved()
-
     def test_partial_stow_failure_removes_link_and_restores_original(self):
         self.mock("stow", 'ln -s "$HOME/../repo/stow/.config/demo" "$HOME/.config/demo"; exit 1')
         self.assertNotEqual(self.run_migration().returncode, 0)

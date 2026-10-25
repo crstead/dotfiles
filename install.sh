@@ -37,6 +37,7 @@ if [[ "$CHECK_ONLY" == true ]]; then
 fi
 
 source "$DOTFILES_DIR/scripts/packages.sh"
+source "$DOTFILES_DIR/scripts/tools.sh"
 source "$DOTFILES_DIR/scripts/firefox.sh"
 source "$DOTFILES_DIR/scripts/neovim.sh"
 source "$DOTFILES_DIR/scripts/zsh.sh"
@@ -94,6 +95,7 @@ install_system_config() {
 
 # Main installation sequence
 install_packages
+install_node
 install_zsh_config
 configure_default_shell
 install_neovim

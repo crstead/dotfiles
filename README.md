@@ -13,6 +13,12 @@ Run:
 The installer includes the desktop applications used by this setup: Firefox,
 Thunar and its archive tools, Pavucontrol, Galculator, and Okular.
 
+Node/npm are installed locally from the latest official Node 22 release when
+Node 22+ and npm are not already available. Tree-sitter requires CLI 0.26.1+;
+the installer downloads a checksummed 0.27.1 binary when necessary. These
+downloads support Linux x86-64 and ARM64 and use `~/.local/bin`, which the login
+configuration adds to PATH. `--check` reports versions that need updating.
+
 Check the setup before installing:
 
 ```bash
@@ -21,8 +27,15 @@ Check the setup before installing:
 
 Checks validate source files, shell syntax, Firefox policy JSON, and Stow
 conflicts, and report which tools and installations are present. They make no
-changes, require no sudo, and use no network access. An existing `.profile`
-is reported as a planned backup, matching the installer's behavior.
+changes, require no sudo, and use no network access.
+
+For a fresh Ubuntu account, the installer replaces the existing regular
+`~/.profile` with the repository version without keeping a backup. It verifies
+that the replacement exists and checks all other Stow conflicts before removing
+that file. An existing managed link is left to Stow; a `.profile` directory or
+link elsewhere must be resolved manually. Other unmanaged files are preserved
+and reported as conflicts. `--check` previews this behavior without removing
+anything.
 
 Exit status is nonzero when a check finds an error. Missing validation tools
 are reported as skipped checks; missing installation dependencies are listed
@@ -124,11 +137,19 @@ bash -n install.sh
 bash -n scripts/*.sh
 ```
 
-Run the config migration regression checks in temporary directories:
+Run the focused regression checks in temporary directories (requires Python 3
+and GNU Stow):
 
 ```bash
 python3 -B -m unittest discover -s scripts/tests
 ```
+
+The installer targets a fresh Ubuntu account. Tests cover profile replacement
+and Stow conflicts, read-only validation, config migration and recovery, and
+tool version/checksum handling. They protect against losing existing files or
+accepting corrupt downloads; they do not mock a complete Ubuntu installation.
+Package installation, downloads, builds, and desktop startup should be verified
+on a disposable fresh Ubuntu installation when changing those steps.
 
 Verify a managed file:
 

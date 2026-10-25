@@ -1,3 +1,7 @@
-#!/bin/bash
-i="$(checkupdates)"
-printf "%b%b" "$i" "${i:+\n}" |wc -l; echo "$i" |column -t #|tr '\n' '\r'
+#!/usr/bin/env bash
+
+# Read the local apt cache; refreshing package lists is a separate user action.
+set -euo pipefail
+updates="$(apt list --upgradable 2>/dev/null | sed '1d')"
+printf '%s\n' "$updates" | awk 'NF {count++} END {print count+0}'
+printf '%s\n' "$updates"

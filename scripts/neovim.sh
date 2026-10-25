@@ -73,36 +73,7 @@ install_neovim() {
 
   echo
   echo "== Checking Tree-sitter CLI =="
-
-  if command -v tree-sitter >/dev/null 2>&1; then
-    echo "Tree-sitter CLI is already installed."
-
-  elif [[ -x "$HOME/.local/bin/tree-sitter" ]]; then
-    echo "Tree-sitter CLI is installed locally."
-
-  else
-    if ! command -v npm >/dev/null 2>&1; then
-      echo "ERROR: npm is required for Tree-sitter CLI."
-      return 1
-    fi
-
-    echo "Installing Tree-sitter CLI..."
-
-    npm install --global \
-      --prefix "$HOME/.local" \
-      tree-sitter-cli || return 1
-  fi
-
-  # Verify installation.
-  if command -v tree-sitter >/dev/null 2>&1; then
-    tree-sitter --version || return 1
-  elif [[ -x "$HOME/.local/bin/tree-sitter" ]]; then
-    "$HOME/.local/bin/tree-sitter" --version ||
-      return 1
-  else
-    echo "ERROR: Tree-sitter CLI is unavailable."
-    return 1
-  fi
+  install_tree_sitter || return 1
 
   echo
   echo "Neovim setup complete."
