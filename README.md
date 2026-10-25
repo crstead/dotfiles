@@ -13,6 +13,19 @@ Run:
 The installer includes the desktop applications used by this setup: Firefox,
 Thunar and its archive tools, Pavucontrol, Galculator, and Okular.
 
+The installer also installs Claude Code (`claude`) and Codex CLI (`codex`)
+using their official native installers when the commands are missing. They use
+`~/.local/bin`, which the shell configuration includes on PATH. Run each command
+to sign in after installation. Existing installations are preserved; `--check`
+reports whether the commands are available.
+
+Update Claude Code with `claude update`. Update Codex by rerunning its
+[official installer](https://learn.chatgpt.com/docs/codex/cli):
+
+```bash
+curl -fsSL https://chatgpt.com/codex/install.sh | sh
+```
+
 Node/npm are managed by [nvm](https://github.com/nvm-sh/nvm). The installer
 installs nvm when missing, installs the latest Node LTS release, and makes it
 the default. Shell

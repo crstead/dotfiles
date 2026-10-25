@@ -4,14 +4,14 @@
 check_installation() {
   local errors=0 skipped=0 file tool
   local tools=(apt sudo git stow zsh node npm go cc make cmake ninja gettext
-    curl tar unzip xz gzip sha256sum python3 nvim tree-sitter sway swayidle swaylock waybar
+    curl tar unzip xz gzip sha256sum python3 nvim tree-sitter claude codex sway swayidle swaylock waybar
     fuzzel wlsunset mako brightnessctl grim slurp pactl kitty zathura vlc
     firefox galculator okular pavucontrol thunar file-roller htop nm-connection-editor)
 
   echo "== Checking installer configuration (read-only) =="
 
   for file in install.sh scripts/packages.sh scripts/firefox.sh scripts/neovim.sh \
-    scripts/zsh.sh scripts/stow.sh scripts/helpers.sh scripts/check.sh scripts/add-stow-config.sh \
+    scripts/zsh.sh scripts/stow.sh scripts/helpers.sh scripts/agents.sh scripts/check.sh scripts/add-stow-config.sh \
     stow/.profile stow/.zprofile stow/.zshenv stow/.zshrc \
     stow/.gitconfig stow/.stow-local-ignore stow/.config/nvim/init.lua \
     system/firefox/policies.json system/90-clamshell.conf; do

@@ -38,6 +38,7 @@ fi
 
 source "$DOTFILES_DIR/scripts/packages.sh"
 source "$DOTFILES_DIR/scripts/helpers.sh"
+source "$DOTFILES_DIR/scripts/agents.sh"
 source "$DOTFILES_DIR/scripts/firefox.sh"
 source "$DOTFILES_DIR/scripts/neovim.sh"
 source "$DOTFILES_DIR/scripts/zsh.sh"
@@ -98,6 +99,7 @@ install_packages
 # Stop on conflicts before downloading tools or building Neovim.
 check_stow_dotfiles
 install_node
+install_agent_clis
 install_zsh_config
 configure_default_shell
 install_neovim
