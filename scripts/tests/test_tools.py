@@ -7,7 +7,7 @@ import tempfile
 import unittest
 
 
-SCRIPT = Path(__file__).resolve().parents[1] / "tools.sh"
+SCRIPTS = Path(__file__).resolve().parents[1]
 
 
 class ToolTests(unittest.TestCase):
@@ -29,7 +29,7 @@ class ToolTests(unittest.TestCase):
 
     def run_script(self, code):
         return subprocess.run(
-            ["bash", "-eu", "-c", 'source "$1"; ' + code, "bash", str(SCRIPT)],
+            ["bash", "-eu", "-c", 'source "$1/helpers.sh"; source "$1/packages.sh"; source "$1/neovim.sh"; ' + code, "bash", str(SCRIPTS)],
             env=self.env, capture_output=True, text=True,
         )
 

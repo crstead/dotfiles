@@ -37,7 +37,7 @@ if [[ "$CHECK_ONLY" == true ]]; then
 fi
 
 source "$DOTFILES_DIR/scripts/packages.sh"
-source "$DOTFILES_DIR/scripts/tools.sh"
+source "$DOTFILES_DIR/scripts/helpers.sh"
 source "$DOTFILES_DIR/scripts/firefox.sh"
 source "$DOTFILES_DIR/scripts/neovim.sh"
 source "$DOTFILES_DIR/scripts/zsh.sh"

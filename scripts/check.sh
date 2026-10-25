@@ -11,7 +11,7 @@ check_installation() {
   echo "== Checking installer configuration (read-only) =="
 
   for file in install.sh scripts/packages.sh scripts/firefox.sh scripts/neovim.sh \
-    scripts/zsh.sh scripts/stow.sh scripts/tools.sh scripts/check.sh scripts/add-stow-config.sh \
+    scripts/zsh.sh scripts/stow.sh scripts/helpers.sh scripts/check.sh scripts/add-stow-config.sh \
     stow/.profile stow/.zprofile stow/.zshenv stow/.zshrc \
     stow/.gitconfig stow/.stow-local-ignore stow/.config/nvim/init.lua \
     system/firefox/policies.json system/90-clamshell.conf; do
@@ -63,8 +63,8 @@ check_installation() {
       echo "MISSING: $tool (may be provided during installation)"
     fi
   done
-  if bash -n "$DOTFILES_DIR/scripts/tools.sh"; then
-    source "$DOTFILES_DIR/scripts/tools.sh"
+  if bash -n "$DOTFILES_DIR/scripts/helpers.sh"; then
+    source "$DOTFILES_DIR/scripts/helpers.sh"
     for tool in node tree-sitter; do
       if command -v "$tool" >/dev/null 2>&1; then
         local minimum=22.0.0
