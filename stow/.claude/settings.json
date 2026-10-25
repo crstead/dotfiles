@@ -1,0 +1,16 @@
+{
+  "preferredNotifChannel": "notifications_disabled",
+  "hooks": {
+    "Notification": [
+      {
+        "matcher": "permission_prompt|elicitation_dialog",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.message // \"Claude Code needs your input\"' | { read -r m; notify-send -a 'Claude Code' 'Claude Code' \"$m\"; } 2>/dev/null || true"
+          }
+        ]
+      }
+    ]
+  }
+}
