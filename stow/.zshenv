@@ -1,2 +1,4 @@
 # Load Rust/Cargo environment if installed.
-[[ -f "$HOME/.cargo/env" ]] && source "$HOME/.cargo/env"
+if [[ -f "$HOME/.cargo/env" ]]; then
+  source "$HOME/.cargo/env"
+fi
