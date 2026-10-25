@@ -1,5 +1,6 @@
 [Default Applications]
 audio/vnd.wave=vlc.desktop
+x-scheme-handler/claude-cli=claude-code-url-handler.desktop
 
 [Added Associations]
 audio/vnd.wave=vlc.desktop;
