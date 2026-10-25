@@ -17,7 +17,11 @@ return {
 				lualine_c = { { "filename", path = 1 } },
 				lualine_x = { { "diagnostics", sources = { "nvim_diagnostic" } } },
 				lualine_y = {},
-				lualine_z = { "location" },
+				lualine_z = {
+					function()
+						return string.format("%d:%d/%d", vim.fn.line("."), vim.fn.charcol("."), vim.fn.line("$"))
+					end,
+				},
 			},
 		})
 	end,

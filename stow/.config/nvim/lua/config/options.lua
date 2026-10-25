@@ -5,7 +5,7 @@ vim.o.statusline = table.concat({
   " %f ",
   "%m%r%h ",
   "%= ",
-  "%l:%c ",
+  "%l:%c/%L ",
   " %p%% ",
 })
 
