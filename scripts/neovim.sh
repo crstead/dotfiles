@@ -42,6 +42,10 @@ install_neovim() {
     echo "Checking out stable release..."
     git -C "$neovim_dir" checkout --detach "$stable_commit" || return 1
 
+    # Clear CMake caches from a previous version before rebuilding.
+    echo "Cleaning previous build..."
+    make -C "$neovim_dir" distclean || return 1
+
     echo "Building Neovim..."
     make -C "$neovim_dir" \
       CMAKE_BUILD_TYPE=RelWithDebInfo || return 1
