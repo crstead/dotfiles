@@ -116,7 +116,7 @@ install_packages() {
     # Low-level ALSA tools such as alsamixer, aplay and speaker-test.
 
     # ───────────────────────────────────────────
-    # Terminal / applications
+    # Applications and utilities
     # ───────────────────────────────────────────
 
     kitty
@@ -128,10 +128,6 @@ install_packages() {
     vlc
     # Media player. Configuration is managed under stow/.config/vlc.
 
-    # ───────────────────────────────────────────
-    # General utilities
-    # ───────────────────────────────────────────
-
     unzip
     xz-utils
     gzip
@@ -142,9 +138,6 @@ install_packages() {
 
     xdg-utils
     # Desktop integration utilities (xdg-open, default applications, MIME associations)
-
-
-    # Desktop applications
 
     firefox
     # Web browser
