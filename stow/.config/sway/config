@@ -15,33 +15,16 @@ set $up k
 set $right l
 # Your preferred terminal emulator
 set $term kitty
-# Your preferred application launcher
-# Note: pass the final command to swaymsg so that the resulting window can be opened
-# on the original workspace that the command was run on.
-set $menu dmenu_path | wmenu | xargs swaymsg exec --
-
 include /etc/sway/config-vars.d/*
 
 ### Output configuration
 #
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
 output * bg "#1e1e2e" solid_color
-#
-# Example configuration:
-#
-# output HDMI-A-1 resolution 1920x1080 position 1920,0
-#
-# You can get the names of your outputs by running: swaymsg -t get_outputs
 
-output HDMI-A-1 scale 1.25
-
-# Clamshell mode
-# Disable the internal display when the lid closes.
-# Restore it when the lid opens.
-set $laptop eDP-1
-
-bindswitch --reload --locked lid:on output $laptop disable
-bindswitch --reload --locked lid:off output $laptop enable
+# Detect internal panels instead of assuming a connector name.
+bindswitch --reload --locked lid:on exec python3 ~/.config/sway/lid.py closed
+bindswitch --reload --locked lid:off exec python3 ~/.config/sway/lid.py open
 
 ### Idle configuration
 #
@@ -81,8 +64,7 @@ bindswitch --reload --locked lid:off output $laptop enable
     bindsym $mod+Shift+q kill
 
     # Start your launcher
-    # bindsym $mod+d exec $menu
-    bindsym $mod+d exec fuzzel --show drun    
+    bindsym $mod+d exec fuzzel
 
     # Drag floating windows by holding down $mod and left mouse button.
     # Resize them with right mouse button + $mod.
@@ -258,3 +240,6 @@ exec swayidle -w \
   before-sleep 'swaylock -f -c 000000'
 
 include /etc/sway/config.d/*
+
+# Optional machine-local output preferences (not managed by Stow).
+include ~/.config/sway/local.conf

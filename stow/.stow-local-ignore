@@ -18,3 +18,7 @@ CVS
 # Machine-local state must never be linked into the repository.
 ^/\.config/go/telemetry(/.*)?$
 ^/\.config/pulse/cookie$
+^/\.config/dconf(/.*)?$
+^/\.config/xfce4/xfconf/xfce-perchannel-xml/thunar\.xml$
+^/\.config/gtk-3\.0/bookmarks$
+^/\.config/sway/local\.conf$

@@ -1,2 +1,7 @@
 /stow/.config/go/telemetry/
 /stow/.config/pulse/cookie
+/nvim.log
+/stow/.config/dconf/
+/stow/.config/xfce4/xfconf/xfce-perchannel-xml/thunar.xml
+/stow/.config/gtk-3.0/bookmarks
+/stow/.config/sway/local.conf

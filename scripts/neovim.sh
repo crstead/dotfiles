@@ -6,7 +6,6 @@ install_neovim() {
   local stamp="$state_dir/neovim-commit"
   local stable_commit
   local installed_commit=""
-  local checked_out_commit
 
   echo
   echo "== Installing Neovim from source =="
@@ -41,17 +40,7 @@ install_neovim() {
     echo "Neovim is already up to date."
   else
     echo "Checking out stable release..."
-    git -C "$neovim_dir" checkout stable || return 1
-
-    checked_out_commit="$(
-      git -C "$neovim_dir" rev-parse HEAD
-    )" || return 1
-
-    if [[ "$checked_out_commit" != "$stable_commit" ]]; then
-      echo "ERROR: Checkout does not match stable tag."
-      echo "Check for a conflicting local stable branch."
-      return 1
-    fi
+    git -C "$neovim_dir" checkout --detach "$stable_commit" || return 1
 
     echo "Building Neovim..."
     make -C "$neovim_dir" \

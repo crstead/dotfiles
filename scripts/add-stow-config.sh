@@ -23,6 +23,11 @@ SOURCE_DIR="$HOME/.config/$APP"
 DEST_DIR="$DOTFILES_DIR/stow/.config/$APP"
 BACKUP_DIR="$HOME/.config/.${APP}.stow-backup.$$"
 
+if [[ -L "$SOURCE_DIR" ]]; then
+  echo "ERROR: config directory is already a symlink: $SOURCE_DIR"
+  exit 1
+fi
+
 if [[ ! -d "$SOURCE_DIR" ]]; then
   echo "ERROR: config directory does not exist:"
   echo "  $SOURCE_DIR"

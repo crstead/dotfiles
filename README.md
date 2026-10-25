@@ -109,6 +109,34 @@ Individual file links keep application-generated state outside the repository.
 Go telemetry and the PulseAudio authentication cookie are excluded from both
 Git and Stow.
 
+The dconf database, Thunar window geometry, and GTK bookmarks are also left
+unmanaged because applications update them and bookmarks contain local paths.
+Existing local copies are preserved.
+
+## Displays
+
+Sway uses the connected displays' default modes and scaling. Lid bindings
+detect internal eDP, LVDS, and DSI panels at runtime and disable them only when
+an external display is active.
+
+Inspect the active displays from a terminal inside Sway:
+
+```bash
+swaymsg -t get_outputs
+```
+
+Put machine-specific scale and position preferences in
+`~/.config/sway/local.conf`, which is excluded from Git and Stow. For example:
+
+```text
+output DP-1 scale 1.25
+```
+
+Use the connector name reported by Sway, or its quoted make/model/serial
+identifier for a monitor that may move between ports. Reload with
+`swaymsg reload` after editing. Scaling is a preference; resolution alone does
+not determine the right value.
+
 ## Review changes in Neovim
 
 CodeDiff loads on demand with `:CodeDiff` or `Space gd`. Open it in a Git

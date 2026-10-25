@@ -16,23 +16,15 @@ if [ -n "$BASH_VERSION" ]; then
     fi
 fi
 
-# set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/bin" ] ; then
-    PATH="$HOME/bin:$PATH"
-fi
-
-# set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/.local/bin" ] ; then
-    PATH="$HOME/.local/bin:$PATH"
-fi
-
-# add .local/bin to PATH
-export PATH="$HOME/.local/bin:$PATH"
-
-# Start Sway automatically on TTY1
-if [ -z "$DISPLAY" ] && [ "$(tty)" = "/dev/tty1" ]; then
-	exec sway
-fi
+# Load language environments before starting the desktop.
 if [ -f "$HOME/.cargo/env" ]; then
     . "$HOME/.cargo/env"
+fi
+
+export PATH="$HOME/.local/bin:$HOME/bin:$PATH"
+
+# Start Sway only from a local login on TTY1.
+if [ -z "${DISPLAY:-}" ] && [ -z "${WAYLAND_DISPLAY:-}" ] &&
+   [ -z "${SSH_CONNECTION:-}" ] && [ "$(tty)" = "/dev/tty1" ]; then
+    exec sway
 fi

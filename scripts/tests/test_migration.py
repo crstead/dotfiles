@@ -67,6 +67,14 @@ class MigrationTests(unittest.TestCase):
         self.assertEqual((self.source / "original").read_text(), "keep me")
         self.assertFalse(list((self.home / ".config").glob(".demo.stow-backup.*")))
 
+    def test_symlinked_config_is_left_untouched(self):
+        external = self.home / "external"
+        self.source.rename(external)
+        self.source.symlink_to(external, target_is_directory=True)
+        self.assertNotEqual(self.run_migration().returncode, 0)
+        self.assertTrue(self.source.is_symlink())
+        self.assert_original_preserved()
+
 
 if __name__ == "__main__":
     unittest.main()

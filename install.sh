@@ -95,6 +95,8 @@ install_system_config() {
 
 # Main installation sequence
 install_packages
+# Stop on conflicts before downloading tools or building Neovim.
+check_stow_dotfiles
 install_node
 install_zsh_config
 configure_default_shell
