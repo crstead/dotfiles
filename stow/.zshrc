@@ -5,6 +5,12 @@ if command -v go >/dev/null 2>&1; then
   path=("$(go env GOPATH)/bin" $path)
 fi
 
+# Load nvm and its default Node version.
+export NVM_DIR="$HOME/.nvm"
+if [ -s "$NVM_DIR/nvm.sh" ]; then
+    . "$NVM_DIR/nvm.sh"
+fi
+
 export ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME="robbyrussell"
 plugins=(git)

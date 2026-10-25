@@ -13,11 +13,19 @@ Run:
 The installer includes the desktop applications used by this setup: Firefox,
 Thunar and its archive tools, Pavucontrol, Galculator, and Okular.
 
-Node/npm are installed locally from the latest official Node 22 release when
-Node 22+ and npm are not already available. Tree-sitter requires CLI 0.26.1+;
-the installer downloads a checksummed 0.27.1 binary when necessary. These
-downloads support Linux x86-64 and ARM64 and use `~/.local/bin`, which the login
-configuration adds to PATH. `--check` reports versions that need updating.
+Node/npm are managed by [nvm](https://github.com/nvm-sh/nvm). The installer
+installs nvm when missing, installs the latest Node LTS release, and makes it
+the default. Shell
+configuration loads nvm before starting Sway and in interactive Zsh terminals.
+Update with `nvm install --lts`; switch versions with `nvm use`. Opening a
+terminal does not download updates.
+Old symlinks created by the previous dotfiles Node installer are removed after
+nvm successfully installs Node; its old distribution directories are left alone.
+
+Tree-sitter requires CLI 0.26.1+; the installer downloads a checksummed 0.27.1
+binary when necessary. That download supports Linux x86-64 and ARM64 and uses
+`~/.local/bin`. `--check` reports nvm availability and tool versions on PATH
+without loading nvm or downloading anything.
 
 Check the setup before installing:
 

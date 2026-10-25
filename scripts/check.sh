@@ -77,6 +77,11 @@ check_installation() {
       fi
     done
   fi
+  if [[ -s "$HOME/.nvm/nvm.sh" ]]; then
+    echo "FOUND: nvm"
+  else
+    echo "MISSING: nvm (installed by the installer)"
+  fi
   if [[ -f "$HOME/.oh-my-zsh/oh-my-zsh.sh" ]]; then
     echo "FOUND: Oh My Zsh"
   elif [[ -e "$HOME/.oh-my-zsh" || -L "$HOME/.oh-my-zsh" ]]; then

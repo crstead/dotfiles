@@ -12,7 +12,7 @@ install_packages() {
     zsh
     # Shell
 
-    # Node and npm are installed from official Node binaries below.
+    # Node and npm are installed through nvm below.
 
     python3-venv
     # Mason creates virtual environments for Python tools such as black.
@@ -176,43 +176,26 @@ install_packages() {
 }
 
 install_node() {
-  export PATH="$HOME/.local/bin:$PATH"
-  if tool_has_version node 22.0.0 && command -v npm >/dev/null 2>&1; then
-    echo "Node $(tool_version node) and npm are already available."
-    return 0
+  export NVM_DIR="$HOME/.nvm"
+  if [[ ! -s "$NVM_DIR/nvm.sh" ]]; then
+    # Stow owns shell configuration; do not let nvm edit profile files.
+    curl -fsSL --retry 3 https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.8/install.sh |
+      PROFILE=/dev/null bash || return 1
   fi
 
-  # Use the newest official Node 22 patch release, including security updates.
-  # Work in a subshell so the temporary-directory trap does not leak out.
-  (
-    set -e
-    local arch work archive checksum name distribution
-    arch="$(linux_tool_arch)" || exit 1
-    work="$(mktemp -d)" || exit 1
-    trap 'rm -rf -- "$work"' EXIT
-    curl -fsSL --retry 3 https://nodejs.org/dist/latest-v22.x/SHASUMS256.txt \
-      -o "$work/SHASUMS256.txt" || exit 1
-    archive=""
-    while read -r checksum name; do
-      if [[ "$name" =~ ^node-v22\.[0-9]+\.[0-9]+-linux-$arch\.tar\.xz$ ]]; then
-        archive="$name"
-        printf '%s  %s\n' "$checksum" "$archive" > "$work/selected.sha256" || exit 1
-        break
-      fi
-    done < "$work/SHASUMS256.txt"
-    [[ -n "$archive" ]] || { echo "ERROR: Node archive missing from checksums." >&2; exit 1; }
-    curl -fsSL --retry 3 "https://nodejs.org/dist/latest-v22.x/$archive" -o "$work/$archive" || exit 1
-    (cd "$work" && sha256sum -c selected.sha256) || exit 1
-    tar -xJf "$work/$archive" -C "$work" || exit 1
-    distribution="${archive%.tar.xz}"
-    mkdir -p "$HOME/.local/share" "$HOME/.local/bin" || exit 1
-    # Replace only this installer's versioned distribution directory.
-    rm -rf -- "$HOME/.local/share/$distribution" || exit 1
-    mv -- "$work/$distribution" "$HOME/.local/share/$distribution" || exit 1
-    for name in node npm npx; do
-      ln -sfn -- "$HOME/.local/share/$distribution/bin/$name" "$HOME/.local/bin/$name" || exit 1
-    done
-    tool_has_version node 22.0.0 || exit 1
-    npm --version
-  )
+  source "$NVM_DIR/nvm.sh" --no-use || return 1
+  nvm install --lts || return 1
+  nvm alias default 'lts/*' || return 1
+  nvm use --lts || return 1
+
+  # Remove only links created by the previous dotfiles Node installer.
+  local name target
+  for name in node npm npx; do
+    target="$HOME/.local/bin/$name"
+    if [[ -L "$target" ]]; then
+      case "$(readlink "$target")" in
+        "$HOME"/.local/share/node-v*-linux-*/bin/"$name") rm -- "$target" || return 1 ;;
+      esac
+    fi
+  done
 }

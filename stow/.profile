@@ -23,6 +23,12 @@ fi
 
 export PATH="$HOME/.local/bin:$HOME/bin:$PATH"
 
+# Load nvm and its default Node version.
+export NVM_DIR="$HOME/.nvm"
+if [ -s "$NVM_DIR/nvm.sh" ]; then
+    . "$NVM_DIR/nvm.sh"
+fi
+
 # Start Sway only from a local login on TTY1.
 if [ -z "${DISPLAY:-}" ] && [ -z "${WAYLAND_DISPLAY:-}" ] &&
    [ -z "${SSH_CONNECTION:-}" ] && [ "$(tty)" = "/dev/tty1" ]; then
