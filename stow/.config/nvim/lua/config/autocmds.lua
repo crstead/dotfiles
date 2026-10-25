@@ -57,7 +57,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 			buffer = args.buf,
 			desc = "Show hover/type info",
 		})
-		vim.keymap.set("n", "rn", vim.lsp.buf.rename, {
+		vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, {
 			buffer = args.buf,
 			desc = "[R]e[n]ame",
 		})
