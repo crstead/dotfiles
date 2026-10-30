@@ -5,7 +5,25 @@ return {
 		cmd = "Telescope",
 		opts = {
 			defaults = {
-				file_ignore_patterns = { "node_modules/" },
+				file_ignore_patterns = {
+					"node_modules/",
+					"%.git/",
+					"%.venv/",
+					"venv/",
+					"dist/",
+					"build/",
+					"target/",
+					"%.next/",
+					"%.nuxt/",
+					"coverage/",
+					"__pycache__/",
+				},
+			},
+			pickers = {
+				find_files = {
+					hidden = true,
+					follow = true,
+				},
 			},
 		},
 		keys = {
