@@ -87,6 +87,9 @@ The whole `stow/` directory is one Stow package. For example,
 `stow/.zshrc` links to `~/.zshrc`. Edit managed files directly; their symlinks
 point back into this checkout. Application-generated state is left unmanaged.
 
+This includes ccstatusline settings and Codex's `config.toml` and saved rules.
+Codex credentials, sessions, caches, and databases remain local and unmanaged.
+
 After adding or moving files, recreate the links:
 
 ```bash

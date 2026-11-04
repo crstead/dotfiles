@@ -5,3 +5,13 @@
 /stow/.config/xfce4/xfconf/xfce-perchannel-xml/thunar.xml
 /stow/.config/gtk-3.0/bookmarks
 /stow/.config/sway/local.conf
+
+# Track only Claude and Codex configuration; credentials and runtime state stay local.
+/stow/.claude/*
+!/stow/.claude/settings.json
+
+/stow/.codex/*
+!/stow/.codex/config.toml
+!/stow/.codex/rules/
+/stow/.codex/rules/*
+!/stow/.codex/rules/default.rules
