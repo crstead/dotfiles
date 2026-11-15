@@ -4,6 +4,24 @@
 
 local augroup = vim.api.nvim_create_augroup("Dotfiles", { clear = true })
 
+-- Use a directory passed to Neovim as the working directory for file searches.
+vim.api.nvim_create_autocmd("VimEnter", {
+	group = augroup,
+	once = true,
+	callback = function()
+		if vim.fn.argc() ~= 1 then
+			return
+		end
+		local directory = vim.fn.argv(0)
+		if vim.bo.filetype == "oil" then
+			directory = require("oil").get_current_dir() or directory
+		end
+		if vim.fn.isdirectory(directory) == 1 then
+			vim.api.nvim_set_current_dir(vim.fn.fnamemodify(directory, ":p"))
+		end
+	end,
+})
+
 vim.api.nvim_create_autocmd("FileType", {
 	group = augroup,
 	desc = "Enable Tree-sitter highlighting when a parser is available",

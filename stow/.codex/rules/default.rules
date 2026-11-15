@@ -1,1 +1,2 @@
 prefix_rule(pattern=["nvim", "--headless"], decision="allow")
+prefix_rule(pattern=["git", "add", "--", "stow/.config/mimeapps.list"], decision="allow")
