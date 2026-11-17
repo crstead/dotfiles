@@ -9,6 +9,20 @@
 # Track only Claude and Codex configuration; credentials and runtime state stay local.
 /stow/.claude/*
 !/stow/.claude/settings.json
+/stow/.claude/skills/*
+!/stow/.claude/skills/
+!/stow/.claude/skills/code-review
+!/stow/.claude/skills/domain-modeling
+!/stow/.claude/skills/grill-me
+!/stow/.claude/skills/grill-with-docs
+!/stow/.claude/skills/grilling
+!/stow/.claude/skills/handoff
+!/stow/.claude/skills/implement
+!/stow/.claude/skills/setup-matt-pocock-skills
+!/stow/.claude/skills/tdd
+!/stow/.claude/skills/teach
+!/stow/.claude/skills/to-spec
+!/stow/.claude/skills/to-tickets
 
 /stow/.codex/*
 !/stow/.codex/config.toml

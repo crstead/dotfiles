@@ -89,7 +89,8 @@ point back into this checkout. Application-generated state is left unmanaged.
 
 This includes ccstatusline settings, Codex's `config.toml` and saved rules, and
 shared agent skills in `~/.agents/skills/` with their `.skill-lock.json` installation
-metadata. Codex credentials, sessions, caches, and databases remain local and
+metadata. Claude skill links in `~/.claude/skills/` point to those shared skills.
+Codex credentials, sessions, caches, and databases remain local and
 unmanaged.
 
 After adding or moving files, recreate the links:

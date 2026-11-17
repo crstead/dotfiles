@@ -9,3 +9,9 @@ trust_level = "trusted"
 
 [projects."/home/crs/projects/oryx-with-custom-qmk"]
 trust_level = "trusted"
+
+[projects."/home/crs/projects/academy"]
+trust_level = "trusted"
+
+[projects."/home/crs/projects/conquerrency"]
+trust_level = "trusted"
